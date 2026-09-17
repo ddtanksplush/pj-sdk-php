@@ -22,6 +22,17 @@ class HttpUtils
     public const NO_CONTENT = [204];
 
     /**
+     * Seconds for the TLS handshake. mTLS costs one extra round trip.
+     */
+    public const CONNECT_TIMEOUT = 10;
+
+    /**
+     * Seconds for the whole response. Guzzle defaults to 0, which means "wait forever":
+     * an unresponsive endpoint would hang the caller's request indefinitely.
+     */
+    public const TIMEOUT = 30;
+
+    /**
      * Makes an HTTP GET request.
      *
      * @param Config $config The configuration object.
@@ -131,7 +142,9 @@ class HttpUtils
 
             $client = new Client([
                 'cert' => $config->getCrt(),
-                'ssl_key' => $config->getKey()
+                'ssl_key' => $config->getKey(),
+                'connect_timeout' => self::CONNECT_TIMEOUT,
+                'timeout' => self::TIMEOUT
             ]);
 
             $options = [

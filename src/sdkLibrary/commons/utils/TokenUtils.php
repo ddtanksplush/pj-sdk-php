@@ -112,7 +112,9 @@ class TokenUtils
 
             $client = new Client([
                 'cert' => $config->getCrt(),
-                'ssl_key' => $config->getKey()
+                'ssl_key' => $config->getKey(),
+                'connect_timeout' => HttpUtils::CONNECT_TIMEOUT,
+                'timeout' => HttpUtils::TIMEOUT
             ]);
 
             $response = $client->post(UrlUtils::buildUrl($config, Constants::URL_TOKEN), [
