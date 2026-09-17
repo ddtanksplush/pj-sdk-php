@@ -144,7 +144,7 @@ class HttpUtils
 
             $response = $client->request($method, $url, $options);
 
-            $retry = self::handleResponse($url, $response, $message, $config->isRateLimitControl());
+            $retry = self::handleResponse($url, $response, $message, $config->isRateLimitControl(), $config->isDebug());
 
             if ($retry) {
                 sleep(60);
@@ -176,13 +176,17 @@ class HttpUtils
      * @param ResponseInterface $response The HTTP response object.
      * @param string $message The error message to use in case of an exception.
      * @param bool $rateLimitControl Whether to handle rate limiting.
+     * @param bool $debug Whether to log every response status to the PHP error log.
      * @return bool True if the request should be retried due to rate limiting, false otherwise.
      * @throws ServerException|ClientException
      */
-    public static function handleResponse(string $url, ResponseInterface $response, string $message, bool $rateLimitControl): bool
+    public static function handleResponse(string $url, ResponseInterface $response, string $message, bool $rateLimitControl, bool $debug = false): bool
     {
         $statusCode = $response->getStatusCode();
-        error_log("http status=$statusCode $url");
+
+        if ($debug) {
+            error_log("http status=$statusCode $url");
+        }
 
         if ($statusCode >= self::SUCCESSFUL && $statusCode < self::REDIRECTION) {
             return false;

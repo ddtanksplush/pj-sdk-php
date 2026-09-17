@@ -74,17 +74,6 @@ class InterSdk
             $dataPaths['private_key_path']
         );
 
-        // Create logs directory if it doesn't exist
-        if (!file_exists("logs")) {
-            mkdir("logs", 0755, true);
-        }
-
-        $tomorrow = "logs/inter-sdk-" . (new \DateTime('+1 day'))->format('D') . ".log";
-        if (file_exists($tomorrow)) {
-            unlink($tomorrow);
-        }
-
-        echo self::VERSION;
     }
 
     private function formatErrorMessage(\Exception $e): string
